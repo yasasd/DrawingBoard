@@ -9,6 +9,8 @@ namespace DrawingBoard
         {
             Canvas canvas = new Canvas();
             var exit = false;
+            Console.Clear();
+            Console.WriteLine("**************************************Drawing Board**************************************");
             while (exit == false)
             {
                 Console.WriteLine();
@@ -35,12 +37,7 @@ namespace DrawingBoard
                         return false;
                     case "render":
                         Console.WriteLine();
-                        Console.WriteLine("**********************************Drawing Board**********************************");
-                        Console.WriteLine();
                         canvas.RenderShapes();
-                        Console.WriteLine();
-                        Console.WriteLine("*********************************************************************************");
-                        Console.WriteLine();
                         return false;
                     case "exit":
                         return true;
@@ -59,7 +56,7 @@ namespace DrawingBoard
         private static object[] GetShapeParams(string command)
         {
             var tokens = command.Split(",");
-            var commandParams = GetCommonParams(tokens[1..]);
+            var commandParams = GetCommonParams(tokens.Skip(1).ToArray());
             var shapeParams = commandParams.Append(Convert.ToDouble(tokens[4])).ToArray(); //length,radius, width or vertical diameter
             switch (tokens[0].Trim().ToLower())
             {
