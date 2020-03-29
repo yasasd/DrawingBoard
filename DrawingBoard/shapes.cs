@@ -2,7 +2,7 @@
 
 namespace DrawingBoard
 {
-    internal class Widget
+    internal abstract class Widget
     {
         public string Name { get; private set; }
         public int X { get; private set; }
@@ -84,7 +84,7 @@ namespace DrawingBoard
     {
         public string Text { get; set; }
         public string BackColor { get; set; }
-        public Textbox(string name, int x, int y, double width, double height, string text, string backColor) : base(name, x, y, width, height)
+        public Textbox(string name, int x, int y, double width, double height,  string backColor, string text) : base(name, x, y, width, height)
         {
             Text = text;
             BackColor = backColor;

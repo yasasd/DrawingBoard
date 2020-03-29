@@ -5,22 +5,6 @@ namespace DrawingBoard
 {
     class Program
     {
-        static string HelpText = @"
-        add-[shape],[name],[x],[y],[properties],...
-                available shapes and properties
-                        Square - Length (required)
-                        Rectangle - Height (required), Width (required)
-                        Circle - Radius (required)
-                        Ellipse - axis a (required), axis b (required)
-                        TextBox - Width (required), Height (required), Background Color (required), Text (optional)
-                
-                ex: to add a rectangle of height 5 and width 10 at x = -5 and y = 8 enter the following command
-                add-Circle,testCircle,-5,8,10
-        render
-            render all shapes on canvas
-        exit
-            exit application";
-
         static void Main()
         {
             Canvas canvas = new Canvas();
@@ -33,7 +17,7 @@ namespace DrawingBoard
             }
         }
 
-        static bool CommandParser(string command, Canvas canvas)
+        private static bool CommandParser(string command, Canvas canvas)
         {
             try
             {
@@ -76,7 +60,7 @@ namespace DrawingBoard
         {
             var tokens = command.Split(",");
             var commandParams = GetCommonParams(tokens[1..]);
-            var shapeParams = commandParams.Append(Convert.ToDouble(tokens[3])).ToArray();
+            var shapeParams = commandParams.Append(Convert.ToDouble(tokens[4])).ToArray(); //length,radius, width or vertical diameter
             switch (tokens[0].Trim().ToLower())
             {
                 case "circle":
@@ -84,12 +68,12 @@ namespace DrawingBoard
                     return shapeParams;
                 case "rectangle":
                 case "ellipse":
-                    return shapeParams.Append(Convert.ToDouble(tokens[4])).ToArray();
+                    return shapeParams.Append(Convert.ToDouble(tokens[4])).ToArray(); //height or horizontal diameter
                 case "textbox":
                     var adParams = new object[3];
-                    adParams[0] = Convert.ToDouble(tokens[4]);
-                    adParams[1] = tokens[5];
-                    adParams[2] = tokens[6];
+                    adParams[0] = Convert.ToDouble(tokens[5]); //height
+                    adParams[1] = tokens[6];//color
+                    adParams[2] = tokens.Length > 7 ? tokens[7] : ""; //text
                     return shapeParams.Concat(adParams).ToArray();
                 default:
                     throw new Exception("Invalid shape type");
@@ -104,6 +88,25 @@ namespace DrawingBoard
             result[2] = Convert.ToInt32(tokens[2]);//y
             return result;
         }
+
+        private static string HelpText = @"
+    ***********************************************************************************
+    *   add-[shape],[name],[x],[y],[properties]...                                    *
+    *            properties must be entered in the following order for each shape     *
+    *                    Square - Length                                              *
+    *                    Rectangle - Height, Width                                    *
+    *                    Circle - Radius                                              *
+    *                    Ellipse - Vertical diameter , Horizontal diameter            *  
+    *                    TextBox - Width, Height, Background Color, Text              *
+    *            ex: to add a rectangle of height 5 and width 10 at x = -5 and y = 8  *
+    *            enter the following command                                          *
+    *            add-Circle,testCircle,-5,8,10                                        *
+    *    render                                                                       *
+    *        render all shapes on canvas                                              *
+    *    exit                                                                         *
+    *        exit application                                                         *
+    ***********************************************************************************";
+
 
     }
 }
