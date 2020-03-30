@@ -56,6 +56,7 @@ namespace DrawingBoard
         private static object[] GetShapeParams(string command)
         {
             var tokens = command.Split(",");
+            //var commandParams = GetCommonParams(tokens[1..]); need c# 8.0, using linq instead
             var commandParams = GetCommonParams(tokens.Skip(1).ToArray());
             var shapeParams = commandParams.Append(Convert.ToDouble(tokens[4])).ToArray(); //length,radius, width or vertical diameter
             switch (tokens[0].Trim().ToLower())
@@ -65,7 +66,7 @@ namespace DrawingBoard
                     return shapeParams;
                 case "rectangle":
                 case "ellipse":
-                    return shapeParams.Append(Convert.ToDouble(tokens[4])).ToArray(); //height or horizontal diameter
+                    return shapeParams.Append(Convert.ToDouble(tokens[5])).ToArray(); //height or horizontal diameter
                 case "textbox":
                     var adParams = new object[3];
                     adParams[0] = Convert.ToDouble(tokens[5]); //height
@@ -86,7 +87,7 @@ namespace DrawingBoard
             return result;
         }
 
-        private static string HelpText = @"
+        private static readonly string HelpText = @"
     ***********************************************************************************
     *   add-[shape],[name],[x],[y],[properties]...                                    *
     *            properties must be entered in the following order for each shape     *
@@ -95,9 +96,9 @@ namespace DrawingBoard
     *                    Circle - Radius                                              *
     *                    Ellipse - Vertical diameter , Horizontal diameter            *  
     *                    TextBox - Width, Height, Background Color, Text              *
-    *            ex: to add a rectangle of height 5 and width 10 at x = -5 and y = 8  *
-    *            enter the following command                                          *
-    *            add-Circle,testCircle,-5,8,10                                        *
+    *            ex: to add a rectangle of width 10 and height 5 at x = -5 and y = 8  *
+    *               enter the following command,                                      *
+    *               add-Rectangle,testBox,-5,8,10,5                                   *
     *    render                                                                       *
     *        render all shapes on canvas                                              *
     *    exit                                                                         *

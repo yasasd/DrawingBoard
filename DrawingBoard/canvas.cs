@@ -18,7 +18,5 @@ namespace DrawingBoard
             ForEach(shape => shape.Draw());
         }
 
-
-
     }
 }

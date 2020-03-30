@@ -4,20 +4,16 @@ namespace DrawingBoard
 {
     internal abstract class Widget
     {
-        public string Name { get; private set; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public string Name { get;  set; }
+        public int X { get;  set; }
+        public int Y { get;  set; }
+        public virtual double Size { get; }
 
-        public virtual double Size => dimensions[0] * dimensions[1];
-
-        // ReSharper disable once InconsistentNaming
-        private readonly double[] dimensions;
-        public Widget(string name, int x, int y, double[] d)
+        protected Widget(string name, int x, int y)
         {
             Name = name;
             X = x;
             Y = y;
-            dimensions = d;
         }
 
         public virtual void Draw()
@@ -30,19 +26,27 @@ namespace DrawingBoard
 
     class Square : Widget
     {
-        public Square(string name, int x, int y, double length) : base(name, x, y,new []{length,length}){}
+        public double Length { get; set; }
 
+        public Square(string name, int x, int y, double length) : base(name, x, y)
+        {
+            Length = length;
+        }
+
+        public override double Size => Length * Length;
     }
 
     class Rectangle: Widget
     {
         public double Height { get; set; }
         public double Width { get; set; }
-        public Rectangle(string name, int x, int y, double width, double height) : base(name, x, y,new[]{ width,height})
+        public Rectangle(string name, int x, int y, double width, double height) : base(name, x, y)
         {
             Height = height;
             Width = width;
         }
+
+        public override double Size => Height * Width;
 
         public override void Draw()
         {
@@ -55,7 +59,7 @@ namespace DrawingBoard
         public double Radius { get; }
         public override double Size => Math.PI * Radius * Radius;
 
-        public Circle(string name, int x, int y, double radius) : base(name, x, y, new double[] {})
+        public Circle(string name, int x, int y, double radius) : base(name, x, y)
         {
             Radius = radius;
         }
@@ -68,7 +72,7 @@ namespace DrawingBoard
         public double VerticalDiameter { get; set; }
         public double HorizontalDiameter { get; set; }
         public override double Size => Math.PI * VerticalDiameter * HorizontalDiameter / 4;
-        public Ellipse(string name, int x, int y, double verticalDiameter, double horizontalDiameter) : base(name, x, y, new double[]{})
+        public Ellipse(string name, int x, int y, double verticalDiameter, double horizontalDiameter) : base(name, x, y)
         {
             VerticalDiameter = verticalDiameter;
             HorizontalDiameter = horizontalDiameter;
